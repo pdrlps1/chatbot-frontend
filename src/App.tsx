@@ -1,34 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from 'react'
+import { pingAPI } from './utils/api'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [mensagem, setMensagem] = useState('Carregando...')
+  const [erro, setErro] = useState('')
+
+  useEffect(() => {
+    pingAPI()
+      .then(res => res.json())
+      .then(data => setMensagem(data.msg))
+      .catch(() => {
+        setMensagem('')
+        setErro('Erro ao conectar com a API do backend!')
+      })
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{
+      minHeight: '100vh',
+      background: '#15171c',
+      color: '#fff',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: '100vh'
+    }}>
+      <h1>Teste de Conexão Backend</h1>
+      {mensagem && <h2 style={{ color: '#CA8795' }}>{mensagem}</h2>}
+      {erro && <h2 style={{ color: 'tomato' }}>{erro}</h2>}
+    </div>
   )
 }
 
